@@ -39,13 +39,14 @@ type server struct {
 
 func (s *server) IngresoDatos(ctx context.Context, in *pb.IngresoSolicitud) (*pb.Respuesta, error) {
 	log.Printf("Se registra información. \nteam1: %v\nteam2: %v\nscore: %v\nphase: %v", in.Team1, in.Team2, in.Score, in.Phase)
+	Almacenar(in.Team1, in.Team2, in.Score, in.Phase)
 	return &pb.Respuesta{Codigo: "200", Mensaje: "Se registró información"}, nil
 }
 
 func Almacenar(T1 string, T2 string, Scr string, Ph string) {
 	var ctx = context.Background()
 	rbd := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
+		Addr:     "172.17.0.2:6379",
 		Password: "",
 		DB:       0,
 	})
@@ -96,17 +97,36 @@ func Almacenar(T1 string, T2 string, Scr string, Ph string) {
 				Llave := Partido + "," + Ph
 				//Obtenemos data en JSON {[]}
 				Predicciones, err := rbd.Get(ctx, Llave).Result()
-
+				//No existe registro de esa fase
+				if err == redis.Nil {
+					//Registramos la nueva fase
+					var unaFase Fase
+					//Fase.Pais = "Pais-Pais,Fase
+					unaFase.Pais = Llave
+					var Prediccion Predic
+					Prediccion.Punteo = Scr
+					Prediccion.Votos = 1
+					unaFase.Predics = append(unaFase.Predics, Prediccion)
+					SetFase, err := json.Marshal(unaFase)
+					if err != nil {
+						panic(err)
+					}
+					err3 := rbd.Set(ctx, unaFase.Pais, SetFase, 0).Err()
+					if err3 != nil {
+						panic(err3)
+					}
+					return
+				}
 				if err != nil {
 					panic(err)
 				}
 				var unaFase Fase
 				json.Unmarshal([]byte(Predicciones), &unaFase)
-				for _, pred := range unaFase.Predics {
+				for i, pred := range unaFase.Predics {
 					if Scr == pred.Punteo {
 						//Existe ya una predicción identica
 						//Actualizamos +1 los votos
-						pred.Votos = pred.Votos + 1
+						unaFase.Predics[i].Votos = pred.Votos + 1
 						setFase, err := json.Marshal(unaFase)
 						if err != nil {
 							panic(err)
@@ -143,16 +163,36 @@ func Almacenar(T1 string, T2 string, Scr string, Ph string) {
 				//Obtenemos data en JSON {[]}
 				Predicciones, err := rbd.Get(ctx, Llave).Result()
 
+				//No existe registro de esa fase
+				if err == redis.Nil {
+					//Registramos la nueva fase
+					var unaFase Fase
+					//Fase.Pais = "Pais-Pais,Fase
+					unaFase.Pais = Llave
+					var Prediccion Predic
+					Prediccion.Punteo = Scr
+					Prediccion.Votos = 1
+					unaFase.Predics = append(unaFase.Predics, Prediccion)
+					SetFase, err := json.Marshal(unaFase)
+					if err != nil {
+						panic(err)
+					}
+					err3 := rbd.Set(ctx, unaFase.Pais, SetFase, 0).Err()
+					if err3 != nil {
+						panic(err3)
+					}
+					return
+				}
 				if err != nil {
 					panic(err)
 				}
 				var unaFase Fase
 				json.Unmarshal([]byte(Predicciones), &unaFase)
-				for _, pred := range unaFase.Predics {
+				for i, pred := range unaFase.Predics {
 					if Scr == pred.Punteo {
 						//Existe ya una predicción identica
 						//Actualizamos +1 los votos
-						pred.Votos = pred.Votos + 1
+						unaFase.Predics[i].Votos = pred.Votos + 1
 						setFase, err := json.Marshal(unaFase)
 						if err != nil {
 							panic(err)
