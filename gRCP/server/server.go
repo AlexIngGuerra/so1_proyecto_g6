@@ -15,7 +15,8 @@ import (
 )
 
 var (
-	port = flag.Int("port", 50051, "The server port")
+	port      = flag.Int("port", 50051, "Puerto del servidor--")
+	ipdestino = flag.String("ipdest", "192.168.0.8:33000", "La ip del destino de Redis")
 )
 
 type Paises struct {
@@ -41,12 +42,14 @@ func (s *server) IngresoDatos(ctx context.Context, in *pb.IngresoSolicitud) (*pb
 	log.Printf("Se registra información. \nteam1: %v\nteam2: %v\nscore: %v\nphase: %v", in.Team1, in.Team2, in.Score, in.Phase)
 	Almacenar(in.Team1, in.Team2, in.Score, in.Phase)
 	return &pb.Respuesta{Codigo: "200", Mensaje: "Se registró información"}, nil
+
 }
 
 func Almacenar(T1 string, T2 string, Scr string, Ph string) {
 	var ctx = context.Background()
 	rbd := redis.NewClient(&redis.Options{
-		Addr:     "172.17.0.2:6379",
+		//Addr:     "172.17.0.2:6379",
+		Addr:     *ipdestino,
 		Password: "",
 		DB:       0,
 	})
@@ -264,6 +267,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
+	fmt.Println("la ip destino: ", *ipdestino)
+
 	s := grpc.NewServer()
 	pb.RegisterGreeterServer(s, &server{})
 	log.Printf("server listening at %v", lis.Addr())
