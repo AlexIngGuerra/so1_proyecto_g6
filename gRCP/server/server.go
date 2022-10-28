@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"strings"
 	"github.com/go-redis/redis/v9"
 	"log"
 	"net"
+	"strings"
 
 	"google.golang.org/grpc"
 
@@ -65,7 +65,8 @@ func Almacenar(T1 string, T2 string, Scr string, Ph string) {
 		paisanos.Paises = append(paisanos.Paises, T1+"-"+T2)
 		err2 := rbd.Set(ctx, "Paises", JsonPaises, 0).Err()
 		if err2 != nil {
-			panic(err2)
+			fmt.Println(err2)
+			return
 		}
 		//Registramos la nueva fase
 		var unaFase Fase
@@ -77,15 +78,18 @@ func Almacenar(T1 string, T2 string, Scr string, Ph string) {
 		unaFase.Predics = append(unaFase.Predics, Prediccion)
 		SetFase, err := json.Marshal(unaFase)
 		if err != nil {
-			panic(err)
+			fmt.Println(err)
+			return
 		}
 		err3 := rbd.Set(ctx, unaFase.Pais, SetFase, 0).Err()
 		if err3 != nil {
-			panic(err3)
+			fmt.Println(err3)
+			return
 		}
 		return
 	} else if err != nil {
-		panic(err)
+		fmt.Println(err)
+		return
 	} else {
 		Partido := T1 + "-" + T2
 		Partidoaux := T2 + "-" + T1
@@ -114,16 +118,19 @@ func Almacenar(T1 string, T2 string, Scr string, Ph string) {
 					unaFase.Predics = append(unaFase.Predics, Prediccion)
 					SetFase, err := json.Marshal(unaFase)
 					if err != nil {
-						panic(err)
+						fmt.Println(err)
+						return
 					}
 					err3 := rbd.Set(ctx, unaFase.Pais, SetFase, 0).Err()
 					if err3 != nil {
-						panic(err3)
+						fmt.Println(err3)
+						return
 					}
 					return
 				}
 				if err != nil {
-					panic(err)
+					fmt.Println(err)
+					return
 				}
 				var unaFase Fase
 				json.Unmarshal([]byte(Predicciones), &unaFase)
@@ -134,12 +141,14 @@ func Almacenar(T1 string, T2 string, Scr string, Ph string) {
 						unaFase.Predics[i].Votos = pred.Votos + 1
 						setFase, err := json.Marshal(unaFase)
 						if err != nil {
-							panic(err)
+							fmt.Println(err)
+							return
 						}
 						//Guardamos el cambio
 						err3 := rbd.Set(ctx, Llave, setFase, 0).Err()
 						if err3 != nil {
-							panic(err3)
+							fmt.Println(err3)
+							return
 						}
 						return
 					}
@@ -153,12 +162,14 @@ func Almacenar(T1 string, T2 string, Scr string, Ph string) {
 				//pais-pais,fase
 				setFase, err := json.Marshal(unaFase)
 				if err != nil {
-					panic(err)
+					fmt.Println(err)
+					return
 				}
 				//Se registra el cambio
 				err3 := rbd.Set(ctx, Llave, setFase, 0).Err()
 				if err3 != nil {
-					panic(err3)
+					fmt.Println(err3)
+					return
 				}
 				return
 			} else if Partidoaux == pais {
@@ -180,16 +191,19 @@ func Almacenar(T1 string, T2 string, Scr string, Ph string) {
 					unaFase.Predics = append(unaFase.Predics, Prediccion)
 					SetFase, err := json.Marshal(unaFase)
 					if err != nil {
-						panic(err)
+						fmt.Println(err)
+						return
 					}
 					err3 := rbd.Set(ctx, unaFase.Pais, SetFase, 0).Err()
 					if err3 != nil {
-						panic(err3)
+						fmt.Println(err3)
+						return
 					}
 					return
 				}
 				if err != nil {
-					panic(err)
+					fmt.Println(err)
+					return
 				}
 				var unaFase Fase
 				json.Unmarshal([]byte(Predicciones), &unaFase)
@@ -200,12 +214,14 @@ func Almacenar(T1 string, T2 string, Scr string, Ph string) {
 						unaFase.Predics[i].Votos = pred.Votos + 1
 						setFase, err := json.Marshal(unaFase)
 						if err != nil {
-							panic(err)
+							fmt.Println(err)
+							return
 						}
 						//Guardamos el cambio
 						err3 := rbd.Set(ctx, Llave, setFase, 0).Err()
 						if err3 != nil {
-							panic(err3)
+							fmt.Println(err3)
+							return
 						}
 						return
 					}
@@ -219,12 +235,14 @@ func Almacenar(T1 string, T2 string, Scr string, Ph string) {
 				//pais-pais,fase
 				setFase, err := json.Marshal(unaFase)
 				if err != nil {
-					panic(err)
+					fmt.Println(err)
+					return
 				}
 				//Se registra el cambio
 				err3 := rbd.Set(ctx, Llave, setFase, 0).Err()
 				if err3 != nil {
-					panic(err3)
+					fmt.Println(err3)
+					return
 				}
 				return
 			}
@@ -235,13 +253,14 @@ func Almacenar(T1 string, T2 string, Scr string, Ph string) {
 		SetPaises, err := json.Marshal(Paises)
 		if err != nil {
 			fmt.Println(err)
-			panic("Falló convertir a JSON ")
+			fmt.Println("Falló convertir a JSON ")
 			return
 		}
 		//Agregamos el país
 		err2 := rbd.Set(ctx, "Paises", SetPaises, 0).Err()
 		if err2 != nil {
-			panic(err2)
+			fmt.Println(err2)
+			return
 		}
 		var unaFase Fase
 		//Fase.Pais = "Pais-Pais,Fase
@@ -252,11 +271,13 @@ func Almacenar(T1 string, T2 string, Scr string, Ph string) {
 		unaFase.Predics = append(unaFase.Predics, Prediccion)
 		SetFase, err := json.Marshal(unaFase)
 		if err != nil {
-			panic(err)
+			fmt.Println(err)
+			return
 		}
 		err3 := rbd.Set(ctx, unaFase.Pais, SetFase, 0).Err()
 		if err3 != nil {
-			panic(err3)
+			fmt.Println(err3)
+			return
 		}
 		return
 	}
