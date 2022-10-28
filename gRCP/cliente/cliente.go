@@ -15,7 +15,7 @@ const (
 )
 
 var (
-	addr = flag.String("addr", "localhost:50051", "the address to connect to")
+	addr = flag.String("addr", "172.17.0.3:50051", "the address to connect to")
 	name = flag.String("name", defaultName, "Name to greet")
 )
 
@@ -40,5 +40,5 @@ func IngresarDatos(team1 string, team2 string, score string, phase string) {
 }
 
 func main() {
-	IngresarDatos("Guatemala", "Mexico", "25-20", "2")
+	IngresarDatos("Guatemala", "Argentina", "25-20", "2")
 }

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"strings"
 	"github.com/go-redis/redis/v9"
 	"log"
 	"net"
@@ -46,10 +47,11 @@ func (s *server) IngresoDatos(ctx context.Context, in *pb.IngresoSolicitud) (*pb
 }
 
 func Almacenar(T1 string, T2 string, Scr string, Ph string) {
+	redisIp := strings.Split(*ipdestino, "'")[1]
 	var ctx = context.Background()
 	rbd := redis.NewClient(&redis.Options{
 		//Addr:     "172.17.0.2:6379",
-		Addr:     *ipdestino,
+		Addr:     redisIp,
 		Password: "",
 		DB:       0,
 	})
@@ -225,39 +227,38 @@ func Almacenar(T1 string, T2 string, Scr string, Ph string) {
 					panic(err3)
 				}
 				return
-			} else {
-				//No encontró
-				Paises.Paises = append(Paises.Paises, Partido)
-
-				SetPaises, err := json.Marshal(Paises)
-				if err != nil {
-					fmt.Println(err)
-					panic("Falló convertir a JSON ")
-					return
-				}
-				//Agregamos el país
-				err2 := rbd.Set(ctx, "Paises", SetPaises, 0).Err()
-				if err2 != nil {
-					panic(err2)
-				}
-				var unaFase Fase
-				//Fase.Pais = "Pais-Pais,Fase
-				unaFase.Pais = Partido + "," + Ph
-				var Prediccion Predic
-				Prediccion.Punteo = Scr
-				Prediccion.Votos = 1
-				unaFase.Predics = append(unaFase.Predics, Prediccion)
-				SetFase, err := json.Marshal(unaFase)
-				if err != nil {
-					panic(err)
-				}
-				err3 := rbd.Set(ctx, unaFase.Pais, SetFase, 0).Err()
-				if err3 != nil {
-					panic(err3)
-				}
-				return
 			}
 		}
+		//No encontró
+		Paises.Paises = append(Paises.Paises, Partido)
+
+		SetPaises, err := json.Marshal(Paises)
+		if err != nil {
+			fmt.Println(err)
+			panic("Falló convertir a JSON ")
+			return
+		}
+		//Agregamos el país
+		err2 := rbd.Set(ctx, "Paises", SetPaises, 0).Err()
+		if err2 != nil {
+			panic(err2)
+		}
+		var unaFase Fase
+		//Fase.Pais = "Pais-Pais,Fase
+		unaFase.Pais = Partido + "," + Ph
+		var Prediccion Predic
+		Prediccion.Punteo = Scr
+		Prediccion.Votos = 1
+		unaFase.Predics = append(unaFase.Predics, Prediccion)
+		SetFase, err := json.Marshal(unaFase)
+		if err != nil {
+			panic(err)
+		}
+		err3 := rbd.Set(ctx, unaFase.Pais, SetFase, 0).Err()
+		if err3 != nil {
+			panic(err3)
+		}
+		return
 	}
 }
 
