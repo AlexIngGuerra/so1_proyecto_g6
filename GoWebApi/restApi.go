@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/mux"
 	"net/http"
 	"strings"
+	"strconv"
 )
 
 type Saludo struct {
@@ -17,7 +18,7 @@ type Saludo struct {
 }
 
 var (
-	ipdestino = flag.String("ipdest", "192.168.0.8:33000", "La ip del destino de Redis")
+	ipdestino = flag.String("ipdest", "172.17.0.2:6379", "La ip del destino de Redis")
 )
 
 type RespuestaPais struct {
@@ -62,7 +63,7 @@ func Hola(response http.ResponseWriter, request *http.Request) {
 
 func GetPaises(response http.ResponseWriter, request *http.Request) {
 	response.Header().Add("content-type", "application/json")
-	redisIp := strings.Split(*ipdestino, "'")[1]
+	redisIp := strings.Split(*ipdestino, "'")[0]
 	var ctx = context.Background()
 	rbd := redis.NewClient(&redis.Options{
 		//Addr:     "172.17.0.2:6379",
@@ -106,7 +107,7 @@ type PaisFase struct {
 
 func GetPaisFase(response http.ResponseWriter, request *http.Request) {
 	response.Header().Add("content-type", "application/json")
-	redisIp := strings.Split(*ipdestino, "'")[1]
+	redisIp := strings.Split(*ipdestino, "'")[0]
 	var ctx = context.Background()
 	rbd := redis.NewClient(&redis.Options{
 		//Addr:     "172.17.0.2:6379",
@@ -116,7 +117,9 @@ func GetPaisFase(response http.ResponseWriter, request *http.Request) {
 	})
 	var entrada PaisFase
 	json.NewDecoder((request.Body)).Decode(&entrada)
-	Llave := entrada.Pais + "," + string(entrada.Fase)
+	fmt.Println(entrada)
+	Llave := entrada.Pais + "," + strconv.FormatInt(int64(entrada.Fase), 10)
+	fmt.Println(Llave)
 	Predicciones, err := rbd.Get(ctx, Llave).Result()
 	if err == redis.Nil {
 		fmt.Println("No hay datos con ese valor")
@@ -168,6 +171,7 @@ func main() {
 	router := mux.NewRouter()
 	enableCORS(router)
 	fmt.Println("Server on Port ", 8000)
+	fmt.Println(*ipdestino)
 
 	router.HandleFunc("/Hola", Hola).Methods("GET")
 	router.HandleFunc("/GetPaises", GetPaises).Methods("POST")
