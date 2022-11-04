@@ -3,13 +3,19 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
 	"time"
 
+	pb "sopes/protoc"
+
 	"github.com/segmentio/kafka-go"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 var total int
@@ -73,6 +79,7 @@ func enviarInfo(info string) {
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	client, _ = mongo.Connect(ctx, options.Client().ApplyURI("mongodb://172.17.0.2:27017"))
 	ingresarLog(inf)
+	obtenerLogs()
 
 	defer client.Disconnect(ctx)
 }
@@ -88,10 +95,11 @@ func ingresarLog(info Info) {
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	result, _ := colletion.InsertOne(ctx, info)
 
+	IngresarDatos(info.Team1, info.Team2, info.Score, info.Phase)
+
 	fmt.Println(result)
 }
 
-/*
 func obtenerLogs() {
 
 	colletion := client.Database("goDB").Collection("Log")
@@ -112,7 +120,36 @@ func obtenerLogs() {
 	}
 
 	fmt.Println(lista)
-}*/
+}
+
+const (
+	defaultName = "world"
+)
+
+var (
+	addr = flag.String("addr", "20.120.51.0:50051", "the address to connect to")
+	name = flag.String("name", defaultName, "Name to greet")
+)
+
+func IngresarDatos(team1 string, team2 string, score string, phase string) {
+	flag.Parse()
+	// Set up a connection to the server.
+	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	c := pb.NewGreeterClient(conn)
+
+	// Contact the server and print out its response.
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := c.IngresoDatos(ctx, &pb.IngresoSolicitud{Team1: team1, Team2: team2, Score: score, Phase: phase})
+	if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}
+	log.Printf("\nCodigo: %s\nMensaje: %s", r.GetCodigo(), r.GetMensaje())
+}
 
 /* ***************************
 FUNCION MAIN
