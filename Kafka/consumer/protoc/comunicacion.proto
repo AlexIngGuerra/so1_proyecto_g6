@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option go_package = "google.golang.org/grcp/protoc";
+option java_multiple_files = true;
+option java_package = "io.grcp.protoc";
+option java_outer_classname = "ProyectoProto";
+
+package helloworld;
+
+// The greeting service definition.
+service Greeter {
+  // Sends a greeting
+  rpc IngresoDatos (IngresoSolicitud) returns (Respuesta) {}
+}
+
+// The request message containing the user's name.
+message IngresoSolicitud {
+  string team1 = 1;
+  string team2 = 2;
+  string score = 3;
+  string phase = 4;
+}
+
+// The response message containing the greetings
+message Respuesta {
+  string codigo = 1;
+  string mensaje = 2;
+}
