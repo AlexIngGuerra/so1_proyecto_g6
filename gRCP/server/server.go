@@ -8,7 +8,7 @@ import (
 	"github.com/go-redis/redis/v9"
 	"log"
 	"net"
-	"strings"
+//	"strings"
 
 	"google.golang.org/grpc"
 
@@ -17,7 +17,7 @@ import (
 
 var (
 	port      = flag.Int("port", 50051, "Puerto del servidor--")
-	ipdestino = flag.String("ipdest", "192.168.0.8:33000", "La ip del destino de Redis")
+	ipdestino = flag.String("ipdest", "52.191.101.54:6379", "La ip del destino de Redis")
 )
 
 type Paises struct {
@@ -47,11 +47,11 @@ func (s *server) IngresoDatos(ctx context.Context, in *pb.IngresoSolicitud) (*pb
 }
 
 func Almacenar(T1 string, T2 string, Scr string, Ph string) {
-	redisIp := strings.Split(*ipdestino, "'")[1]
+	//redisIp := strings.Split(*ipdestino, "'")
 	var ctx = context.Background()
 	rbd := redis.NewClient(&redis.Options{
 		//Addr:     "172.17.0.2:6379",
-		Addr:     redisIp,
+		Addr:     *ipdestino,
 		Password: "",
 		DB:       0,
 	})
