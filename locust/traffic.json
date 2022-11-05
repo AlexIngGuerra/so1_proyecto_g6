@@ -1,0 +1,302 @@
+[
+    {
+      "team1": "Antigua and Barbuda",
+      "team2": "Netherlands Antilles",
+      "score": "4-2",
+      "phase": "2"
+    },
+    {
+      "team1": "Costa Rica",
+      "team2": "Romania",
+      "score": "1-4",
+      "phase": "2"
+    },
+    {
+      "team1": "Austria",
+      "team2": "Cayman Islands",
+      "score": "0-2",
+      "phase": "2"
+    },
+    {
+      "team1": "Turkmenistan",
+      "team2": "Thailand",
+      "score": "0-1",
+      "phase": "4"
+    },
+    {
+      "team1": "Netherlands",
+      "team2": "Burundi",
+      "score": "4-4",
+      "phase": "1"
+    },
+    {
+      "team1": "Kiribati",
+      "team2": "Northern Mariana Islands",
+      "score": "5-4",
+      "phase": "1"
+    },
+    {
+      "team1": "Afghanistan",
+      "team2": "Malawi",
+      "score": "2-4",
+      "phase": "4"
+    },
+    {
+      "team1": "Virgin Islands (British)",
+      "team2": "Rwanda",
+      "score": "5-1",
+      "phase": "4"
+    },
+    {
+      "team1": "Tokelau",
+      "team2": "Togo",
+      "score": "5-5",
+      "phase": "4"
+    },
+    {
+      "team1": "Bouvet Island",
+      "team2": "Macau",
+      "score": "5-5",
+      "phase": "3"
+    },
+    {
+      "team1": "Gabon",
+      "team2": "Iran",
+      "score": "4-1",
+      "phase": "2"
+    },
+    {
+      "team1": "Iceland",
+      "team2": "Mayotte",
+      "score": "3-1",
+      "phase": "4"
+    },
+    {
+      "team1": "Marshall Islands",
+      "team2": "New Caledonia",
+      "score": "3-3",
+      "phase": "3"
+    },
+    {
+      "team1": "Philippines",
+      "team2": "Equatorial Guinea",
+      "score": "5-4",
+      "phase": "4"
+    },
+    {
+      "team1": "Egypt",
+      "team2": "Mauritania",
+      "score": "2-5",
+      "phase": "4"
+    },
+    {
+      "team1": "Guinea",
+      "team2": "Malta",
+      "score": "0-5",
+      "phase": "3"
+    },
+    {
+      "team1": "Moldova",
+      "team2": "Saint Lucia",
+      "score": "1-2",
+      "phase": "1"
+    },
+    {
+      "team1": "Argentina",
+      "team2": "Switzerland",
+      "score": "2-0",
+      "phase": "3"
+    },
+    {
+      "team1": "Albania",
+      "team2": "Nauru",
+      "score": "0-3",
+      "phase": "4"
+    },
+    {
+      "team1": "Peru",
+      "team2": "Zambia",
+      "score": "0-2",
+      "phase": "4"
+    },
+    {
+      "team1": "S. Georgia and S. Sandwich Isls.",
+      "team2": "Palau",
+      "score": "4-3",
+      "phase": "3"
+    },
+    {
+      "team1": "Bahamas",
+      "team2": "Kazakhstan",
+      "score": "4-4",
+      "phase": "1"
+    },
+    {
+      "team1": "Christmas Island",
+      "team2": "Brazil",
+      "score": "1-0",
+      "phase": "1"
+    },
+    {
+      "team1": "Nicaragua",
+      "team2": "Nepal",
+      "score": "2-0",
+      "phase": "3"
+    },
+    {
+      "team1": "Sweden",
+      "team2": "Kuwait",
+      "score": "5-4",
+      "phase": "1"
+    },
+    {
+      "team1": "Slovak Republic",
+      "team2": "Oman",
+      "score": "1-1",
+      "phase": "4"
+    },
+    {
+      "team1": "Algeria",
+      "team2": "Guadeloupe",
+      "score": "4-1",
+      "phase": "4"
+    },
+    {
+      "team1": "Svalbard and Jan Mayen Islands",
+      "team2": "San Marino",
+      "score": "4-1",
+      "phase": "1"
+    },
+    {
+      "team1": "French Southern Territories",
+      "team2": "Angola",
+      "score": "5-4",
+      "phase": "2"
+    },
+    {
+      "team1": "United Arab Emirates",
+      "team2": "Tuvalu",
+      "score": "3-3",
+      "phase": "1"
+    },
+    {
+      "team1": "Norway",
+      "team2": "Madagascar",
+      "score": "1-4",
+      "phase": "3"
+    },
+    {
+      "team1": "Bangladesh",
+      "team2": "Andorra",
+      "score": "5-5",
+      "phase": "1"
+    },
+    {
+      "team1": "Vanuatu",
+      "team2": "Bosnia and Herzegovina",
+      "score": "3-5",
+      "phase": "3"
+    },
+    {
+      "team1": "Slovenia",
+      "team2": "French Guiana",
+      "score": "4-3",
+      "phase": "2"
+    },
+    {
+      "team1": "Dominican Republic",
+      "team2": "Jordan",
+      "score": "2-1",
+      "phase": "1"
+    },
+    {
+      "team1": "Japan",
+      "team2": "Papua New Guinea",
+      "score": "3-1",
+      "phase": "4"
+    },
+    {
+      "team1": "Anguilla",
+      "team2": "Trinidad and Tobago",
+      "score": "4-2",
+      "phase": "4"
+    },
+    {
+      "team1": "Mongolia",
+      "team2": "Liechtenstein",
+      "score": "0-1",
+      "phase": "3"
+    },
+    {
+      "team1": "French Polynesia",
+      "team2": "Chile",
+      "score": "2-4",
+      "phase": "3"
+    },
+    {
+      "team1": "Bulgaria",
+      "team2": "India",
+      "score": "1-3",
+      "phase": "3"
+    },
+    {
+      "team1": "Namibia",
+      "team2": "Solomon Islands",
+      "score": "2-3",
+      "phase": "2"
+    },
+    {
+      "team1": "Cyprus",
+      "team2": "Uganda",
+      "score": "5-5",
+      "phase": "2"
+    },
+    {
+      "team1": "Niue",
+      "team2": "Bolivia",
+      "score": "1-0",
+      "phase": "2"
+    },
+    {
+      "team1": "Belarus",
+      "team2": "China",
+      "score": "5-5",
+      "phase": "2"
+    },
+    {
+      "team1": "Armenia",
+      "team2": "Greenland",
+      "score": "5-4",
+      "phase": "2"
+    },
+    {
+      "team1": "Mexico",
+      "team2": "Denmark",
+      "score": "4-4",
+      "phase": "2"
+    },
+    {
+      "team1": "El Salvador",
+      "team2": "Congo",
+      "score": "2-5",
+      "phase": "3"
+    },
+    {
+      "team1": "Qatar",
+      "team2": "Virgin Islands (US)",
+      "score": "0-2",
+      "phase": "4"
+    },
+    {
+      "team1": "Sao Tome and Principe",
+      "team2": "Djibouti",
+      "score": "5-0",
+      "phase": "2"
+    },
+    {
+      "team1": "Falkland Islands (Malvinas)",
+      "team2": "Cuba",
+      "score": "3-1",
+      "phase": "2"
+    }
+  ]

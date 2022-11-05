@@ -7,10 +7,30 @@ import (
 	"fmt"
 	"github.com/go-redis/redis/v9"
 	"github.com/gorilla/mux"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"net/http"
 	"strings"
 	"strconv"
+	"time"
 )
+
+var client *mongo.Client
+
+type Info struct {
+	Team1 string `json:"team1"`
+	Team2 string `json:"team2"`
+	Score string `json:"score"`
+	Phase string `json:"phase"`
+}
+
+type RespuestaLogs struct {
+	Codigo int `json:"Codigo"`
+	Mensaje string `json:"Mensaje"`
+	Logs []Info `json:"Logs"`
+	Cantidad int `json:"Cantidad"`
+}
 
 type Saludo struct {
 	Codigo int    `json:"Codigo"`
@@ -18,7 +38,7 @@ type Saludo struct {
 }
 
 var (
-	ipdestino = flag.String("ipdest", "172.17.0.2:6379", "La ip del destino de Redis")
+	ipdestino = flag.String("ipdest", "52.191.101.54:6379", "La ip del destino de Redis")
 )
 
 type RespuestaPais struct {
@@ -105,6 +125,48 @@ type PaisFase struct {
 	Fase int    `json:"Fase"`
 }
 
+func BorrarLogs(response http.ResponseWriter, request *http.Request) {
+	response.Header().Add("content-type", "application/json")
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	client, _ = mongo.Connect(ctx, options.Client().ApplyURI("mongodb://dbmong-g6:n2hUsQ1MC6Py4xkZOJ9zwSwJKlUa2vsgaUX6qvDVqaOZ4dUmw1SSfCQTTvQx4ONBm3lH9c4OxTTnWHlZTO7vkQ==@dbmong-g6.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&maxIdleTimeMS=120000&appName=@dbmong-g6@"))
+
+	colletion := client.Database("goDB").Collection("Log")
+	_, err := colletion.DeleteMany(ctx, bson.M{})
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("borrar")
+	json.NewEncoder(response).Encode("Listo")
+}
+
+func obtenerLogs(response http.ResponseWriter, request *http.Request) {
+	response.Header().Add("content-type", "application/json")
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	client, _ = mongo.Connect(ctx, options.Client().ApplyURI("mongodb://dbmong-g6:n2hUsQ1MC6Py4xkZOJ9zwSwJKlUa2vsgaUX6qvDVqaOZ4dUmw1SSfCQTTvQx4ONBm3lH9c4OxTTnWHlZTO7vkQ==@dbmong-g6.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&maxIdleTimeMS=120000&appName=@dbmong-g6@"))
+
+	colletion := client.Database("goDB").Collection("Log")
+	cursor, err := colletion.Find(ctx, bson.M{})
+
+	var lista []Info
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer cursor.Close(ctx)
+
+	for cursor.Next(ctx) {
+		var logs Info
+		cursor.Decode(&logs)
+		lista = append(lista, logs)
+	}
+
+	var Respuesta RespuestaLogs
+	Respuesta.Codigo = 200
+	Respuesta.Logs = lista
+	Respuesta.Cantidad = len(lista)
+	fmt.Println("Obtener Logs")
+	json.NewEncoder(response).Encode(Respuesta)
+}
+
 func GetPaisFase(response http.ResponseWriter, request *http.Request) {
 	response.Header().Add("content-type", "application/json")
 	redisIp := strings.Split(*ipdestino, "'")[0]
@@ -176,6 +238,8 @@ func main() {
 	router.HandleFunc("/Hola", Hola).Methods("GET")
 	router.HandleFunc("/GetPaises", GetPaises).Methods("POST")
 	router.HandleFunc("/GetPaisFase", GetPaisFase).Methods("POST")
+	router.HandleFunc("/obtenerLogs", obtenerLogs).Methods("GET")
+	router.HandleFunc("/deleteLogs", BorrarLogs).Methods("GET")
 	http.ListenAndServe(":8000", router)
 	fmt.Println("Este es el main")
 }
