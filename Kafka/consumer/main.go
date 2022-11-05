@@ -20,10 +20,10 @@ import (
 
 var total int
 
-//bases de datos
+// bases de datos
 var client *mongo.Client
 
-//INFORMACION A INGRESAR
+// INFORMACION A INGRESAR
 type Info struct {
 	Team1 string `json:"team1"`
 	Team2 string `json:"team2"`
@@ -31,9 +31,12 @@ type Info struct {
 	Phase string `json:"phase"`
 }
 
-/* ***************************
+/*
+	***************************
+
 LEER ARCHIVO DE KAFKA
-******************************/
+*****************************
+*/
 func read() {
 	fmt.Println("inicando lectura..")
 	// to consume messages
@@ -42,7 +45,8 @@ func read() {
 
 	conn, err := kafka.DialLeader(context.Background(), "tcp", "34.135.161.214:9092", topic, partition)
 	if err != nil {
-		log.Fatal("failed to dial leader:", err)
+		fmt.Println("failed to dial leader:", err)
+		return
 	}
 
 	conn.SetReadDeadline(time.Now().Add(10 * time.Second))
@@ -66,7 +70,8 @@ func read() {
 	}
 
 	if err := conn.Close(); err != nil {
-		log.Fatal("failed to close connection:", err)
+		fmt.Println("failed to close connection:", err)
+		return
 	}
 }
 
@@ -77,7 +82,7 @@ func enviarInfo(info string) {
 
 	//INGRESAR INFO A MONGO
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	client, _ = mongo.Connect(ctx, options.Client().ApplyURI("mongodb://172.17.0.2:27017"))
+	client, _ = mongo.Connect(ctx, options.Client().ApplyURI("mongodb://dbmong-g6:n2hUsQ1MC6Py4xkZOJ9zwSwJKlUa2vsgaUX6qvDVqaOZ4dUmw1SSfCQTTvQx4ONBm3lH9c4OxTTnWHlZTO7vkQ==@dbmong-g6.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&replicaSet=globaldb&maxIdleTimeMS=120000&appName=@dbmong-g6@mongodb://dbmong-g6:n2hUsQ1MC6Py4xkZOJ9zwSwJKlUa2vsgaUX6qvDVqaOZ4dUmw1SSfCQTTvQx4ONBm3lH9c4OxTTnWHlZTO7vkQ==@dbmong-g6.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&replicaSet=globaldb&maxIdleTimeMS=120000&appName=@dbmong-g6@"))
 	ingresarLog(inf)
 	obtenerLogs()
 
@@ -151,15 +156,17 @@ func IngresarDatos(team1 string, team2 string, score string, phase string) {
 	log.Printf("\nCodigo: %s\nMensaje: %s", r.GetCodigo(), r.GetMensaje())
 }
 
-/* ***************************
+/*
+	***************************
+
 FUNCION MAIN
-******************************/
+*****************************
+*/
 func main() {
 	total = 0
 	//CONFIGURAR DB MONGO
-
+	fmt.Println("Iniciando...")
 	for true {
-
 		fmt.Print("Total: ")
 		fmt.Println(total)
 		read()

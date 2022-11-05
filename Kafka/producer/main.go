@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 
@@ -19,6 +18,10 @@ type Info struct {
 	Phase string `json:"phase"`
 }
 
+func Hola(response http.ResponseWriter, request *http.Request) {
+	json.NewEncoder(response).Encode("Hola Mundo")
+}
+
 func write(response http.ResponseWriter, request *http.Request) {
 	response.Header().Add("content-type", "application/json")
 	var info Info
@@ -29,7 +32,7 @@ func write(response http.ResponseWriter, request *http.Request) {
 
 	conn, err := kafka.DialLeader(context.Background(), "tcp", "34.135.161.214:9092", topic, partition)
 	if err != nil {
-		log.Fatal("failed to dial leader:", err)
+		json.NewEncoder(response).Encode("failed to dial leader")
 	}
 
 	conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
@@ -42,11 +45,11 @@ func write(response http.ResponseWriter, request *http.Request) {
 		"}\n")})
 
 	if err != nil {
-		log.Fatal("failed to write messages:", err)
+		json.NewEncoder(response).Encode("failed to write messages")
 	}
 
 	if err := conn.Close(); err != nil {
-		log.Fatal("failed to close writer:", err)
+		json.NewEncoder(response).Encode("failed to close writer")
 	}
 
 	json.NewEncoder(response).Encode("Enviado")
@@ -56,6 +59,7 @@ func main() {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/input", write).Methods("POST")
+	router.HandleFunc("/", Hola).Methods("GET")
 
 	fmt.Println("Server on port", 5010)
 	err := http.ListenAndServe(":5010", router)
