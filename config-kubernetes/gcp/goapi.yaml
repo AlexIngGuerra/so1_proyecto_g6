@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deploy-goapi
+  name: deploy-goapi
+  namespace: usactar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deploy-goapi
+  template:
+    metadata:
+      labels:
+        app: deploy-goapi
+    spec:
+      containers:
+
+      - image: danielalfaro1/gowebapi
+        imagePullPolicy: Always
+        name: goapi
+        ports:
+          - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: service-goapi
+  name: service-goapi
+  namespace: usactar
+spec:
+  type: LoadBalancer
+  ports:
+    - name: service-goapi
+      port: 8000
+      protocol: TCP
+  selector:
+    app: deploy-goapi

@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deploy-consumer
+  name: deploy-consumer
+  namespace: usactar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deploy-consumer
+  template:
+    metadata:
+      labels:
+        app: deploy-consumer
+    spec:
+      containers:
+
+      - image: alexingguerra/producer
+        imagePullPolicy: Always
+        name: consumer
+        ports:
+          - containerPort: 80
