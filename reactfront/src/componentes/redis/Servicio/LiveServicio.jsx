@@ -144,7 +144,7 @@ const Datos = {
     }
 }
 
-const Api_URL = "http://192.168.197.130:8000"
+const Api_URL = "http://34.135.93.12.nip.io:8000"
 
 export async function getPaises() {
     try {

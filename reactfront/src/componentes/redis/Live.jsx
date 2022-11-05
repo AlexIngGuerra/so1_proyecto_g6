@@ -54,6 +54,8 @@ export default function Live() {
     
     const [Ver, setVer] = useState(false);
 
+    const [Buscar, setBuscar] = useState(true);
+
     
 
     useEffect(() => {
@@ -67,7 +69,7 @@ export default function Live() {
 
         Actualizar_Grafo();
         
-    }, [Fase, Pais, Ver]);
+    }, [Fase, Pais, Ver, Buscar]);
 
     const Actualizar_Grafo = () => {
         var auxPunt = [];
@@ -124,16 +126,14 @@ export default function Live() {
         <>
             <Grid h={alto} templateRows='repeat(1)'
                 templateColumns='repeat(9)' gap={1}>
-                <GridItem colStart={0} colEnd={1} rowStart={1} rowEnd={1} rounded='md' border='1px'>
-                    Nav vertical bar
-                </GridItem>
+                
                 <GridItem colStart={1} colEnd={10} rowStart={1} rowEnd={1}>
                     <Grid h='full' templateRows='repeat(9, fr)' templateColumns='repeat(17)' gap={1}>
                         <GridItem rowStart={0} rowEnd={1} >
                             <Grid h='full'>
-                               <Heading margin='auto'  size='3xl'>
-                                USACTAR
-                               </Heading>
+                               <Button onClick={() => setBuscar(!Buscar)} bg='blue' color='white'>
+                                Buscar
+                               </Button>
                             </Grid>
                         </GridItem>
                         <GridItem rowStart={1} rowEnd={2} >
@@ -150,7 +150,7 @@ export default function Live() {
                                                     <option value='opcion2'>Alemania-Rusia Ejemplo</option>
                                                 </Select>
                                             ):(
-                                                <Select borderColor='black' onChange={CambioPais}>
+                                                <Select borderColor='black' onChange={CambioPais} placeholder='Selecciona Países'>
                                                     {Paises.Paises.Paises.map((Paisino) => (
                                                         <option value={Paisino}>{Paisino}</option>
                                                     ))}
@@ -161,7 +161,7 @@ export default function Live() {
                                 <GridItem colStart={8} colEnd={15} rowStart={1} rowEnd={1}>
                                     <Box  margin='auto' marginBottom='-10%' h='full' width='75%'  > 
                                     <Text>Fase</Text>
-                                        <Select  borderColor='black' onChange={CambioFase}>
+                                        <Select  borderColor='black' onChange={CambioFase} placeholder='Selecciona una opcion'>
                                             <option value='1'>Octavos</option>
                                             <option value='2'>Cuartos</option>
                                             <option value='3'>Semifinal</option>
